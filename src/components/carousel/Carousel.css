@@ -1,0 +1,28 @@
+.avatar-for-carousel {
+    margin: 5px;
+    cursor: pointer;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+}
+
+.carousel-box {
+    overflow: hidden;
+    width: 440px;
+    height: 110px;
+}
+
+.carousel {
+    position: relative;
+    transition: left linear .2s;
+}
+
+.avatar-container {
+    display: flex;
+}
+
+.hidden {
+    visibility: hidden;
+}

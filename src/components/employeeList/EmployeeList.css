@@ -1,0 +1,23 @@
+.employee-list-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.employee-list {
+    margin: 30px;
+}
+
+.employee-cards-box {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.employee-cards-box a {
+    display: contents;
+    text-decoration: none;
+}
+
+button {
+    margin: 0 auto;
+    width: 150px;
+}

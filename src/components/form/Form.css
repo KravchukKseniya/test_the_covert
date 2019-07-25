@@ -1,0 +1,27 @@
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+}
+
+.comment-form input {
+    height: 30px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.comment-form textarea {
+    height: 80px;
+    resize: none;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.comment-form button {
+    width: 80px;
+}
+
+.comment-form-error {
+    font-size: 10px;
+    color: crimson;
+}

@@ -1,0 +1,8 @@
+.comment-box {
+    display: flex;
+}
+
+.comment-box-date {
+    width: 150px;
+    margin-top: 22px;
+}
