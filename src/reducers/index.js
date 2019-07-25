@@ -6,6 +6,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   const stateCopy = {...state};
+  const usersCopy = [...state.users];
   switch (action.type) {
     case ACTIONS.EMPLOYEES_RECEIVED:
       return {
@@ -13,14 +14,10 @@ const reducer = (state = initialState, action) => {
         users: action.payload
       };
     case ACTIONS.ON_SUBMIT_NEW_COMMENT:
-      const newComments = stateCopy.users.find(user => user.id === action.id).comments;
-      newComments.push(action.payload);
-      return {
-          ...state,
-        users: stateCopy.users
-      };
+      usersCopy.find(user => user.id === action.payload.id).comments.push(action.payload.comment);
+      stateCopy.users = usersCopy;
+      return stateCopy;
     case ACTIONS.PUT_NEW_EMPLOYEE:
-      const usersCopy = [...state.users];
       usersCopy.push(action.payload);
       stateCopy.users = usersCopy;
       return stateCopy;

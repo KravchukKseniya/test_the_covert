@@ -2,9 +2,9 @@ import React from 'react';
 import {connect} from "react-redux";
 import Gravatar from "react-gravatar";
 import {Link} from "react-router-dom";
-import uuid from 'uuid';
 import navigate_before from "../../img/navigate_before.svg";
 import navigate_next from "../../img/navigate_next.svg";
+import { AVATAR_SMALL_SIZE, CAROUSEL_OFFSET } from "../../constants";
 import './Carousel.css';
 
 class Carousel extends React.Component {
@@ -22,10 +22,10 @@ class Carousel extends React.Component {
 
   getAvatars() {
     return this.props.users.map(user =>
-      <Link key={uuid()} to={`/profile/${user.id}`}>
+      <Link key={user.id} to={`/profile/${user.id}`}>
         <Gravatar email={`${user.email}`}
                   className="avatar-for-carousel"
-                  size={100}
+                  size={AVATAR_SMALL_SIZE}
                   title={`${user.name} ${user.surname}`}/>
       </Link>
     )
@@ -43,7 +43,7 @@ class Carousel extends React.Component {
     this.setState({
       ...this.state,
       currentUser: this.state.currentUser - 1,
-      left: this.state.left + 110
+      left: this.state.left + CAROUSEL_OFFSET
     });
   }
 
@@ -51,13 +51,13 @@ class Carousel extends React.Component {
     this.setState({
       ...this.state,
       currentUser: this.state.currentUser + 1,
-      left: this.state.left - 110
+      left: this.state.left - CAROUSEL_OFFSET
     });
   }
 
   createStyleOffset() {
     const offset = this.state.left;
-    return ({left: +offset + 'px'})
+    return ({left: + offset + 'px'})
   }
 
   render() {
@@ -66,7 +66,7 @@ class Carousel extends React.Component {
         {this.props.users.length !== 0 &&
         <div className="main-container">
           <img src={navigate_before}
-               className={this.isLeftArrowVisible()}
+               className={`arrow ${this.isLeftArrowVisible()}`}
                onClick={this.onLeftArrowClick}
                alt="before"/>
           <div className="carousel-box">
@@ -78,7 +78,7 @@ class Carousel extends React.Component {
             </div>
           </div>
           <img src={navigate_next}
-               className={this.isRightArrowVisible()}
+               className={`arrow ${this.isRightArrowVisible()}`}
                onClick={this.onRightArrowClick}
                alt="next"/>
         </div>
@@ -92,4 +92,4 @@ const putStateToProps = (state) => ({
   users: state.users
 });
 
-export default connect(putStateToProps, null)(Carousel)
+export default connect(putStateToProps)(Carousel)

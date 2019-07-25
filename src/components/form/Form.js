@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
+import uuid from "uuid";
 import { onSubmitNewComment } from '../../actions'
 import './Form.css';
 
@@ -7,66 +8,88 @@ class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      comment: {
-        header: '',
-        phonenumber: '',
-        date: '',
-        text: ''
-      },
-      validTitle: false,
-      validPhone: false,
-      validText: false
+        title: '',
+        phone: '',
+        text: '',
+        validtitle: false,
+        validphone: false,
+        validtext: false
     };
     this.onSubmit = this.onSubmit.bind(this);
-    this.validTitle = this.validTitle.bind(this);
-    this.validPhone = this.validPhone.bind(this);
-    this.validText = this.validText.bind(this);
   }
 
-  validTitle() {
-    const commentTitle = document.getElementById('title').value;
-    const titleError = document.getElementById('title-error');
-    if (commentTitle.length > 4 && commentTitle.length < 81) {
-      titleError.innerHTML = '';
-      this.setState({...this.state, validTitle: true});
-    } else {
-      titleError.innerHTML = "Title should be more than 5 and less than 80 characters";
+  static isValid(name, value) {
+    switch (name) {
+      case "title":
+      {
+        return (value.length > 4 && value.length < 81)
+      }
+      case "phone":
+      {
+        const regExpForPhone = /^((8|\+7)[ ]?)?(\(?\d{3}\)?[ ]?)?[\d\- ]{7,10}$/;
+        return regExpForPhone.test(value);
+      }
+      case "text":
+      {
+        return (value.length > 0 && value.length < 128)
+      }
+      default:
+      {
+        return false
+      }
     }
   }
 
-  validPhone() {
-    const commentPhone = document.getElementById('phone').value;
-    const phoneError = document.getElementById('phone-error');
-    const regExpForPhone = /^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/;
-    if (regExpForPhone.test(commentPhone)) {
-      phoneError.innerHTML = '';
-      this.setState({...this.state, validPhone: true})
-    } else {
-      phoneError.innerHTML = "Invalid phone number. Try this format 8 (999) 123-45-64";
+  static getErrorMessage(name) {
+    switch (name) {
+      case "title":
+      {
+        return "Title should be more than 5 and less than 80 characters"
+      }
+      case "phone":
+      {
+        return "Invalid phone number. Try this format 8 (999) 123-45-64";
+      }
+      case "text":
+      {
+        return "The message must be not empty and contain no more than 128 characters"
+      }
+      default:
+      {
+        return " "
+      }
     }
   }
 
-  validText() {
-    const commentText = document.getElementById('comment').value;
-    const textError = document.getElementById('text-error');
-    if (commentText.length > 0 && commentText.length < 128) {
-      textError.innerHTML = '';
-      this.setState({...this.state, validText: true})
+  validField(e) {
+    const {name, value} = e.target;
+    const Error = document.getElementById(`${name}-error`);
+    const valid = `valid${name}`;
+    if (Form.isValid(name, value)) {
+      Error.innerHTML = '';
+      this.setState({...this.state, [valid]: true, [name]: value});
     } else {
-      textError.innerHTML = "The message must be not empty and contain no more than 128 characters";
+      Error.innerHTML = Form.getErrorMessage(name);
+      this.setState({...this.state, [valid]: false})
     }
   }
 
   onSubmit() {
     const newComment = {
-      header: document.getElementById('title').value,
-      phonenumber: document.getElementById('phone').value,
+      id: uuid(),
+      header: this.state.title,
+      phonenumber: this.state.phone,
       date: +new Date(),
-      text: document.getElementById('comment').value
+      text: this.state.text
     };
     this.props.onSubmitNewComment(this.props.employee, newComment);
     document.getElementById('comment-form').reset();
-    this.setState({...this.state, validTitle: false, validPhone: false, validText: false})
+    this.setState({
+      ...this.state,
+      validtitle: false,
+      validphone: false,
+      validtext: false
+    })
   }
 
   render() {
@@ -75,22 +98,22 @@ class Form extends React.Component {
             className="comment-form">
         <span className="fields-title">title</span>
         <input type="text"
-               id="title"
-               name="header"
-               onBlur={this.validTitle}/>
-        <span className="comment-form-error" id="title-error"> </span>
+               placeholder="comment title"
+               name="title"
+               onBlur={(e) => this.validField(e)}/>
+        <span className="comment-form-error" id="title-error"/>
         <span className="fields-title">your phone number</span>
         <input type="tel"
-               id="phone"
-               onBlur={this.validPhone}/>
-        <span className="comment-form-error" id="phone-error"> </span>
-        <textarea placeholder="Your comment text..."
-                  id="comment"
-                  onBlur={this.validText}/>
-        <span className="comment-form-error" id="text-error"> </span>
+               placeholder="phone number"
+               name="phone"
+               onBlur={(e) => this.validField(e)}/>
+        <span className="comment-form-error" id="phone-error"/>
+        <textarea placeholder="your comment..."
+                  name="text"
+                  onBlur={(e) => this.validField(e)}/>
+        <span className="comment-form-error" id="text-error"/>
         <input type="button"
-               id="submit"
-               disabled={!this.state.validTitle || !this.state.validPhone || !this.state.validText}
+               disabled={!this.state.validtitle || !this.state.validphone || !this.state.validtext}
                value="Submit"
                onClick={this.onSubmit}/>
       </form>

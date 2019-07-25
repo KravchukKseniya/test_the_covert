@@ -1,17 +1,16 @@
 import axios from "axios";
 import { put, takeLatest, all } from 'redux-saga/effects'
-import { ACTIONS, addresses, emails, names, positions, surnames } from "../constants";
 import uuid from 'uuid';
+import { ACTIONS, addresses, emails, names, positions, surnames } from "../constants";
+import { getRandomElement } from "../utils";
+import { serverAddress } from "../constants";
+
 
 function* fetchEmployees() {
-  const employees = yield axios.get('http://3zo61.mocklab.io/fullinfo')
+  const employees = yield axios.get(serverAddress)
     .then(res => res.data.users);
 
   yield put({ type: ACTIONS.EMPLOYEES_RECEIVED, payload: employees })
-}
-
-function getRandomElement(arr) {
-  return arr[Math.floor(Math.random() * arr.length)]
 }
 
 function generateUser() {

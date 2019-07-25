@@ -6,8 +6,10 @@ export const getEmployees = () => ({
 
 export const onSubmitNewComment = (id, comment) => ({
   type: ACTIONS.ON_SUBMIT_NEW_COMMENT,
-  payload: comment,
-  id: id
+  payload: {
+    comment: comment,
+    id: id
+  }
 });
 
 export const addNewEmployeeToState = () => ({

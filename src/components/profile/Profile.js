@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Gravatar from "react-gravatar";
 import { Link } from "react-router-dom";
-import uuid from "uuid";
 import CommentCard from "../commentCard/CommentCard";
 import { getEmployees } from "../../actions";
-import { COMMENTS_PER_PAGE } from "../../constants";
+import { COMMENTS_PER_PAGE, AVATAR_BIG_SIZE } from "../../constants";
 import Form from "../form/Form";
 import Carousel from "../carousel/Сarousel";
 import navigate_before from "../../img/navigate_before.svg";
+import { selectUserId } from "../../selectors";
 import './Profile.css';
 
 class Profile extends React.Component {
@@ -19,16 +19,18 @@ class Profile extends React.Component {
   }
 
   getCommentCards() {
-    this.props.selectUser[0].comments.sort(function (commentA, commentB) {
+    const { comments } = this.props.selectedUser;
+    comments.sort((commentA, commentB) => {
       return commentA.date - commentB.date;
     });
-    const commentCards = this.props.selectUser[0].comments.map(comment =>
-      <CommentCard key={uuid()} comment={comment}/>
+    const commentCards = comments.map(comment =>
+      <CommentCard key={comment.id} comment={comment}/>
     );
     return commentCards.splice(-COMMENTS_PER_PAGE)
   }
 
   render() {
+    const {selectedUser} = this.props;
     return (
       <div className="profile-box">
         <Carousel/>
@@ -40,43 +42,42 @@ class Profile extends React.Component {
         </Link>
 
         <h1>Profile</h1>
-        {this.props.selectUser.length !== 0 &&
+        {selectedUser &&
         <div>
-          {console.log(this.props)}
           <div className="profile-box-about-employee">
             <div className="profile-box-avatar">
-              <Gravatar email={`${this.props.selectUser[0].email}`}
-                        size={150}/>
+              <Gravatar email={`${selectedUser.email}`}
+                        size={AVATAR_BIG_SIZE}/>
             </div>
             <div className="profile-box-info">
               <span className="profile-box-info-fields">
                 <span className="fields-title">Name: </span>
-                {this.props.selectUser[0].name}
+                {selectedUser.name}
               </span>
               <span className="profile-box-info-fields">
                 <span className="fields-title">
                   Surname:
                 </span>
-                {this.props.selectUser[0].surname}
+                {selectedUser.surname}
               </span>
               <span className="profile-box-info-fields">
                 <span className="fields-title">
                   Position:
                 </span>
-                {this.props.selectUser[0].position}
+                {selectedUser.position}
               </span>
               <span className="profile-box-info-fields">
                 <span className="fields-title">
                   Address:
                 </span>
-                {this.props.selectUser[0].address}
+                {selectedUser.address}
               </span>
             </div>
           </div>
           <div>
             {this.getCommentCards()}
           </div>
-          <Form employee={this.props.selectUser[0].id}/>
+          <Form employee={selectedUser.id}/>
         </div>
         }
       </div>
@@ -84,17 +85,13 @@ class Profile extends React.Component {
   }
 }
 
-const selectUserId = (state, id) => {
-  return state.users.filter(user => user.id === id);
-};
-
 const mapDispatchToProps = {
   getEmployees: getEmployees
 };
 
 const putStateToProps = (state, props) => ({
   users: state.users,
-  selectUser: selectUserId(state, props.match.params.id)
+  selectedUser: selectUserId(state, props.match.params.id)
 });
 
 export default connect(putStateToProps, mapDispatchToProps)(Profile)

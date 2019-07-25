@@ -14,6 +14,10 @@
     height: 110px;
 }
 
+.arrow {
+    cursor: pointer;
+}
+
 .carousel {
     position: relative;
     transition: left linear .2s;

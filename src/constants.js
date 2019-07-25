@@ -1,3 +1,5 @@
+export const serverAddress = 'http://3zo61.mocklab.io/users';
+
 export const  ACTIONS = {
   GET_EMPLOYEES: "GET_EMPLOYEES",
   EMPLOYEES_RECEIVED: "EMPLOYEES_RECEIVED",
@@ -7,6 +9,9 @@ export const  ACTIONS = {
 };
 
 export const COMMENTS_PER_PAGE = 5;
+export const AVATAR_SMALL_SIZE = 100;
+export const AVATAR_BIG_SIZE = 150;
+export const CAROUSEL_OFFSET = 110;
 
 export const names = [
   "Pavel",
